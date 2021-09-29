@@ -6,7 +6,9 @@ const port = process.env.PORT || 3001
 // const db = require('./conn')//資料庫連線
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 
 const db = mysql.createConnection({
   host: '166.62.28.131',
