@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mysql = require('mysql');
 const cors = require("cors");
+const port = process.env.PORT || 3001
 // const db = require('./conn')//資料庫連線
 
 app.use(express.json());
@@ -55,8 +56,8 @@ app.post('/login', (req, res) => {
   })
 })
 
-app.listen(3001, () => {
-  console.log("running on port 3001");
+app.listen(port, () => {
+  console.log(`running on port${port}`);
 })
 
 // createPool的連線方式有成功
