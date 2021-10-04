@@ -137,6 +137,12 @@ app.get('/users', (req, res, next) => {
 app.get('/posts', (req, res, next) => {
   db.query("SELECT * FROM tanya33_stock_posts", (err, result) => {
     if (err) {
+      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        // db error 重新連線
+        disconnect_handler();
+      } else {
+          throw err;
+      }
       console.log(err);
       res.send(err)
     }
@@ -156,6 +162,12 @@ app.post('/create-post', (req, res, next) => {
   [title, body], 
   (err, result) => {
     if (err) {
+      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        // db error 重新連線
+        disconnect_handler();
+      } else {
+          throw err;
+      }
       res.send({err: err})
     }
     if (result) {
@@ -173,6 +185,12 @@ app.get('/my-fav', (req, res, next) => {
   usernameFav, 
   (err, result) => {
     if (err) {
+      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        // db error 重新連線
+        disconnect_handler();
+      } else {
+          throw err;
+      }
       res.send({err: err})
     }
     if (result) {
