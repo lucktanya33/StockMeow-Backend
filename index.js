@@ -36,7 +36,6 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true,
       expires: 60 * 60 * 24// 24hours
     }
   })
