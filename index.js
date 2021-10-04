@@ -36,6 +36,7 @@ app.use(
     proxy: true,
     cookie: {
       httpOnly: true,
+      secure: true,
       expires: 60 * 60 * 24// 24hours
     }
   })
