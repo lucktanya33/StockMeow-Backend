@@ -35,6 +35,7 @@ app.use(
     saveUninitialized: false,
     proxy: true,
     cookie: {
+      secure: true,
       expires: 60 * 60 * 24// 24hours
     }
   })
