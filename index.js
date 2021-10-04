@@ -33,6 +33,7 @@ app.use(
     secret: "cat",
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     cookie: {
       expires: 60 * 60 * 24// 24hours
     }
