@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
   res.send('Login system server side BY nodejs express')
 })
 
-app.post('/register', (req, res) => {
+app.post('/register', (req, res, next) => {
   // 前端送過來的資料
   const username = req.body.username
   const password = req.body.password
@@ -66,19 +66,19 @@ app.post('/register', (req, res) => {
     }
   })
 })
-app.get('/logout', (req, res) => {
+app.get('/logout', (req, res, next) => {
     req.session.user = null
     res.send({ loggedIn: false})
 })
 
-app.get('/login', (req, res) => {
+app.get('/login', (req, res, next) => {
   if (req.session.user) {
     res.send({ loggedIn: true, user: req.session.user})
   } else {
     res.send({ loggedIn: false})
   }
 })
-app.post('/login', (req, res) => {
+app.post('/login', (req, res, next) => {
   const username = req.body.username
   const password = req.body.password
 
@@ -97,7 +97,7 @@ app.post('/login', (req, res) => {
   })
 })
 
-app.get('/users', (req, res) => {
+app.get('/users', (req, res, next) => {
   db.query("SELECT * FROM tanya33_users", (err, result) => {
     if (err) {
       console.log(err);
@@ -110,7 +110,7 @@ app.get('/users', (req, res) => {
   })
 })
 
-app.get('/posts', (req, res) => {
+app.get('/posts', (req, res, next) => {
   db.query("SELECT * FROM tanya33_stock_posts", (err, result) => {
     if (err) {
       console.log(err);
@@ -123,7 +123,7 @@ app.get('/posts', (req, res) => {
   })
 })
 
-app.post('/create-post', (req, res) => {
+app.post('/create-post', (req, res, next) => {
   // 前端送過來的資料
   const title = req.body.inputTitle
   const body = req.body.inputBody
@@ -142,7 +142,7 @@ app.post('/create-post', (req, res) => {
 
 // 個人頁面
 // SELECT tanya33_stock_fav.stock_code FROM `tanya33_stock_fav` WHERE username = "tanya"
-app.get('/my-fav', (req, res) => {
+app.get('/my-fav', (req, res, next) => {
   console.log(req.session.user[0].username);
   const usernameFav = req.session.user[0].username
   db.query(" SELECT tanya33_stock_fav.stock_code FROM tanya33_stock_fav WHERE username = ? ", 
