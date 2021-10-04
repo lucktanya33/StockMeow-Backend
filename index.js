@@ -5,6 +5,7 @@ const cors = require("cors");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser")
+const disconnect_handler = require('./disconnection')// 資料庫斷線的處理器
 const port = process.env.PORT || 3001
 
 app.use(express.json());
@@ -37,11 +38,12 @@ app.use(
   })
 )
 
+// 原本的連線方式
 const db = mysql.createConnection({
   host: '166.62.28.131',
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: 'mtr04group1'  
+  password: process.env.PASSWORD,
+  database: 'mtr04group1'
 })
 
 
@@ -51,14 +53,21 @@ app.get('/', (req, res) => {
 })
 
 app.post('/register', (req, res, next) => {
-  // 前端送過來的資料
+  //拿前端資料
   const username = req.body.username
   const password = req.body.password
-
+  // SQL query
   db.query("INSERT INTO tanya33_users (username, password) VALUES (?, ?)", 
   [username, password], 
   (err, result) => {
     if (err) {
+      console.log('hi');
+      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        // db error 重新連線
+        disconnect_handler();
+      } else {
+          throw err;
+      }      
       res.send({err: err})
     }
     if (result) {
@@ -66,6 +75,7 @@ app.post('/register', (req, res, next) => {
     }
   })
 })
+
 app.get('/logout', (req, res, next) => {
     req.session.user = null
     res.send({ loggedIn: false})
@@ -78,14 +88,22 @@ app.get('/login', (req, res, next) => {
     res.send({ loggedIn: false})
   }
 })
+
 app.post('/login', (req, res, next) => {
   const username = req.body.username
   const password = req.body.password
-
+  // SQL query
   db.query("SELECT *  FROM tanya33_users WHERE username =? AND password = ?", 
   [username, password], 
   (err, result) => {
     if (err) {
+      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        console.log('hi');
+        // db error 重新連線
+        disconnect_handler();
+      } else {
+          throw err;
+      }
       res.send({err: err})
     }
     if (result. length > 0) {
@@ -100,7 +118,13 @@ app.post('/login', (req, res, next) => {
 app.get('/users', (req, res, next) => {
   db.query("SELECT * FROM tanya33_users", (err, result) => {
     if (err) {
-      console.log(err);
+      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        console.log('hi');
+        // db error 重新連線
+        disconnect_handler();
+      } else {
+          throw err;
+      }      
       res.send(err)
     }
     if (result) {
