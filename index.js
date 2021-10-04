@@ -29,14 +29,12 @@ app.use(function (req, res, next) {
 
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.set('trust proxy', 1);
 app.use(
   session({
     key: "userId",
     secret: "cat",
     resave: false,
     saveUninitialized: false,
-    proxy: true,
     cookie: {
       secure: true,
       expires: 60 * 60 * 24// 24hours
