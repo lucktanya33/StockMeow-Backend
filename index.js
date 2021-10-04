@@ -48,7 +48,6 @@ const db = mysql.createConnection({
 
 
 app.get('/', (req, res) => {
-  db.connect()
   res.send('Login system server side BY nodejs express')
 })
 
