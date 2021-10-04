@@ -8,10 +8,13 @@ const cookieParser = require("cookie-parser")
 const disconnect_handler = require('./disconnection')// 資料庫斷線的處理器
 const port = process.env.PORT || 3001
 
+const originLocal = 'http://localhost:3000'
+const originProduction = 'https://lucktanya33.github.io'
+
 app.use(express.json());
 
 app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); 
+  res.setHeader('Access-Control-Allow-Origin', originProduction); 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Accept');
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -35,7 +38,6 @@ app.use(
     saveUninitialized: false,
     proxy: true,
     cookie: {
-      httpOnly: true,
       secure: true,
       expires: 60 * 60 * 24// 24hours
     }
