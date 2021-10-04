@@ -9,10 +9,15 @@ var mysql_config = {
 function disconnect_handler() {
    let conn = mysql.createConnection(mysql_config);
     conn.connect(err => {
-        (err) && setTimeout('disconnect_handler()', 500);
-    });
+        // (err) && setTimeout('disconnect_handler()', 500);
+        console.log('error when connecting to db:', err);
+        if(err) {
+          setTimeout(disconnect_handler, 2000)
+        }
+      });
 
     conn.on('error', err => {
+        console.log('db error', err);
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
             // db error 重新連線
             disconnect_handler();
