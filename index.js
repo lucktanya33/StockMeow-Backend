@@ -28,7 +28,7 @@ app.use(
   })
 );*/
 
-app.enable('trust proxy')
+//app.enable('trust proxy')
 // app.options('*', cors());
 
 app.use(function (req, res, next) {
@@ -54,9 +54,8 @@ app.use(
     secret: "cat",
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      expires: 60 * 60 * 24// 24hours
-    }
+    cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
+    // cookie: {expires: 60 * 60 * 24}
   })
 )
 
