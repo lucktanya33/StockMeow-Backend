@@ -12,14 +12,33 @@ const originLocal = 'http://localhost:3000'
 const originProduction = 'https://lucktanya33.github.io'
 
 app.use(express.json());
+// Jason's method
+app.use(
+  cors({
+    origin: [originLocal, originProduction],
+    credentials: true,
+  })
+);
+app.use(
+  session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
+  })
+);
 
-app.use(function (req, res, next) {
+app.enable('trust proxy')
+app.options('*', cors());
+
+/*app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', originLocal); 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Accept');
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
-})
+})*/
+
 
 /*app.use(cors({
   origin: 'http://localhost:3000',
@@ -29,7 +48,7 @@ app.use(function (req, res, next) {
 
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(
+/*app.use(
   session({
     key: "userId",
     secret: "cat",
@@ -39,9 +58,8 @@ app.use(
       expires: 60 * 60 * 24// 24hours
     }
   })
-)
+)*/
 
-// 原本的連線方式
 const db = mysql.createConnection({
   host: '166.62.28.131',
   user: process.env.DB_USER,
