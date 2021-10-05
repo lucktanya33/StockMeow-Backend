@@ -14,7 +14,7 @@ const originProduction = 'https://lucktanya33.github.io'
 app.use(express.json());
 
 app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', originProduction); 
+  res.setHeader('Access-Control-Allow-Origin', originLocal); 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Accept');
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -80,6 +80,7 @@ app.post('/register', (req, res, next) => {
 
 app.get('/logout', (req, res, next) => {
     req.session.user = null
+    console.log('GET LOGOUT', req.session);
     res.send({ loggedIn: false})
 })
 
@@ -104,34 +105,18 @@ app.post('/login', (req, res, next) => {
         // db error 重新連線
         disconnect_handler();
       } else {
+          console.log(err);
           throw err;
       }
       res.send({err: err})
     }
     if (result. length > 0) {
+      console.log(result);
       req.session.user = result//存session
+      console.log(req.session);
       res.send(result)
     } else {
       res.send({ message: "帳號或密碼錯誤"})
-    }
-  })
-})
-
-app.get('/users', (req, res, next) => {
-  db.query("SELECT * FROM tanya33_users", (err, result) => {
-    if (err) {
-      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-        console.log('hi');
-        // db error 重新連線
-        disconnect_handler();
-      } else {
-          throw err;
-      }      
-      res.send(err)
-    }
-    if (result) {
-      console.log(result);
-      res.send(result);
     }
   })
 })
@@ -149,7 +134,6 @@ app.get('/posts', (req, res, next) => {
       res.send(err)
     }
     if (result) {
-      console.log(result);
       res.send(result);
     }
   })
