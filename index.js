@@ -27,8 +27,8 @@ app.use(
     cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
   })
 );*/
-
-app.enable('trust proxy')
+app.set('trust proxy', 1)
+//app.enable('trust proxy')
 // app.options('*', cors());
 
 app.use(function (req, res, next) {
