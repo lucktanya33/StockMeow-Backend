@@ -53,9 +53,9 @@ app.use(
     key: "userId",
     secret: "cat",
     resave: false,
-    saveUninitialized: false,
-    cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
-    // cookie: {expires: 60 * 60 * 24}
+    saveUninitialized: true,
+    // cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
+    cookie: {expires: 60 * 60 * 24}
   })
 )
 
