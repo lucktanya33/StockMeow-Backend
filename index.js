@@ -13,7 +13,7 @@ const originProduction = 'https://lucktanya33.github.io'
 
 app.use(express.json());
 // Jason's method
-app.use(
+/*app.use(
   cors({
     origin: [originLocal, originProduction],
     credentials: true,
@@ -26,18 +26,18 @@ app.use(
     saveUninitialized: true,
     cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
   })
-);
+);*/
 
 app.enable('trust proxy')
-app.options('*', cors());
+// app.options('*', cors());
 
-/*app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', originLocal); 
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', originProduction); 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Accept');
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
-})*/
+})
 
 
 /*app.use(cors({
@@ -48,7 +48,7 @@ app.options('*', cors());
 
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
-/*app.use(
+app.use(
   session({
     key: "userId",
     secret: "cat",
@@ -58,7 +58,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
       expires: 60 * 60 * 24// 24hours
     }
   })
-)*/
+)
 
 const db = mysql.createConnection({
   host: '166.62.28.131',
