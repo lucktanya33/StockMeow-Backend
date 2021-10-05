@@ -54,8 +54,8 @@ app.use(
     secret: "cat",
     resave: false,
     // saveUninitialized: true,
-    cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
-    //cookie: {expires: 60 * 60 * 24}
+    //cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
+    cookie: { httpOnly: true, secure: true, expires: 60 * 60 * 24 }
   })
 )
 
