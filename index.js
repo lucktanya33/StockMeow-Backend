@@ -13,7 +13,7 @@ const originProduction = 'https://lucktanya33.github.io'
 
 app.use(express.json());
 // Jason's method
-/*app.use(
+app.use(
   cors({
     origin: [originLocal, originProduction],
     credentials: true,
@@ -26,12 +26,12 @@ app.use(
     saveUninitialized: true,
     cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
   })
-);*/
+);
 app.set('trust proxy', 1)
-//app.enable('trust proxy')
+// app.enable('trust proxy')
 // app.options('*', cors());
 
-app.use(function (req, res, next) {
+/*app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', [originLocal, originProduction]); 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Accept');
