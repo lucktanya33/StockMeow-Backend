@@ -59,7 +59,7 @@ app.use(
   })
 )
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: '166.62.28.131',
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
