@@ -80,7 +80,7 @@ app.post('/register', (req, res, next) => {
   [username, password], 
   (err, result) => {
     if (err) {
-      console.log('hiiii');
+      console.log('hiiiii');
       if (err.code === 'PROTOCOL_CONNECTION_LOST') {
         // db error 重新連線
         disconnect_handler();
