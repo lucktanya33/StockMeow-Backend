@@ -12,7 +12,8 @@ function disconnect_handler() {
         // (err) && setTimeout('disconnect_handler()', 500);
         console.log('error when connecting to db:', err);
         if(err) {
-          setTimeout(disconnect_handler, 1000)
+          disconnect_handler()
+          // setTimeout(disconnect_handler, 1000)
         }
       });
 
