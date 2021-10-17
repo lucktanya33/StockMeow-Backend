@@ -19,6 +19,7 @@ app.use(
     credentials: true,
   })
 );
+// production
 app.use(
   session({
     secret: 'cat',
@@ -27,6 +28,17 @@ app.use(
     cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
   })
 );
+// local
+/*app.use(
+  session({
+    key: "userId",
+    secret: "cat",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { expires: 60 * 60 * 24}
+  })
+)*/
+
 app.set('trust proxy', 1)
 // app.enable('trust proxy')
 // app.options('*', cors());
@@ -38,26 +50,12 @@ app.set('trust proxy', 1)
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 })
-
-
-/*app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ["GET", "POST"],
-  credentials: true
 }))*/
+
+
 
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(
-  session({
-    key: "userId",
-    secret: "cat",
-    resave: false,
-    // saveUninitialized: true,
-    //cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
-    cookie: { secure: true, expires: 60 * 60 * 24, sameSite: 'none' }
-  })
-)
 
 const db = mysql.createPool({
   host: '166.62.28.131',
@@ -65,7 +63,6 @@ const db = mysql.createPool({
   password: process.env.DB_PASSWORD,
   database: 'mtr04group1'
 })
-
 
 app.get('/', (req, res) => {
   res.send('Login system server side BY nodejs express')
@@ -103,6 +100,7 @@ app.get('/logout', (req, res, next) => {
 
 app.get('/login', (req, res, next) => {
   if (req.session.user) {
+    console.log('get login req.session.user', req.session.user);
     res.send({ loggedIn: true, user: req.session.user})
   } else {
     res.send({ loggedIn: false})
@@ -118,7 +116,6 @@ app.post('/login', (req, res, next) => {
   (err, result) => {
     if (err) {
       if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-        console.log('hi');
         // db error 重新連線
         disconnect_handler();
       } else {
@@ -128,9 +125,7 @@ app.post('/login', (req, res, next) => {
       res.send({err: err})
     }
     if (result. length > 0) {
-      console.log(result);
       req.session.user = result//存session
-      console.log(req.session);
       res.send(result)
     } else {
       res.send({ message: "帳號或密碼錯誤"})
@@ -179,10 +174,9 @@ app.post('/create-post', (req, res, next) => {
   })
 })
 
-// 個人頁面
+// 功能-我的最愛股票
 // SELECT tanya33_stock_fav.stock_code FROM `tanya33_stock_fav` WHERE username = "tanya"
 app.get('/my-fav', (req, res, next) => {
-  console.log(req.session.user[0].username);
   const usernameFav = req.session.user[0].username
   db.query(" SELECT tanya33_stock_fav.stock_code FROM tanya33_stock_fav WHERE username = ? ", 
   usernameFav, 
@@ -200,25 +194,51 @@ app.get('/my-fav', (req, res, next) => {
       res.send(result)
     }
   })
-
 })
+
+app.post('/my-fav2', (req, res, next) => {
+  const username = req.body.username
+  db.query(" SELECT tanya33_stock_fav.stock_code FROM tanya33_stock_fav WHERE username = ? ", 
+  username, 
+  (err, result) => {
+    if (err) {
+      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        // db error 重新連線
+        disconnect_handler();
+      } else {
+          throw err;
+      }
+      res.send({err: err})
+    }
+    if (result) {
+      res.send(result)
+    }
+  })
+})
+
+app.post('/my-fav', (req, res, next) => {
+  // 前端送過來的資料
+  const username = req.session.user[0].username
+  const stockCode = req.body.stockCode
+
+  db.query("INSERT INTO tanya33_stock_fav (username, stock_code) VALUES (?, ?)", 
+  [username, stockCode], 
+  (err, result) => {
+    if (err) {
+      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        // db error 重新連線
+        disconnect_handler();
+      } else {
+          throw err;
+      }
+      res.send({err: err})
+    }
+    if (result) {
+      res.send(result)
+    }
+  })
+})
+
 app.listen(port, () => {
   console.log(`running on port${port}`);
 })
-
-// createPool的連線方式有成功
-/*const db = mysql.createPool({
-  host: '166.62.28.131',
-  user: 'mtr04group1',
-  password: 'Lidemymtr04group1',
-  database: 'mtr04group1'
-})
-
-app.get("/", (req, res) => {
-  const sqlInsert = "INSERT INTO tanya33_users (username) VALUES ('nodejs test');"
-  db.query(sqlInsert, (err, result) => {
-    console.log(result);
-    console.log(err);
-    res.send("hello world")
-  })
-})*/
