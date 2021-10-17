@@ -218,7 +218,7 @@ app.post('/my-fav2', (req, res, next) => {
 
 app.post('/my-fav', (req, res, next) => {
   // 前端送過來的資料
-  const username = req.session.user[0].username
+  const username = req.body.username
   const stockCode = req.body.stockCode
 
   db.query("INSERT INTO tanya33_stock_fav (username, stock_code) VALUES (?, ?)", 
