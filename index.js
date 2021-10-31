@@ -134,7 +134,7 @@ app.post('/login', (req, res, next) => {
 })
 
 app.get('/posts', (req, res, next) => {
-  db.query("SELECT * FROM tanya33_stock_posts", (err, result) => {
+  db.query("SELECT * FROM tanya33_stock_posts ORDER BY id DESC", (err, result) => {
     if (err) {
       if (err.code === 'PROTOCOL_CONNECTION_LOST') {
         // db error 重新連線
